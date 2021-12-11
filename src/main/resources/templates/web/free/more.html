@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>高级配置 - [[${domain}]] - CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+    <style type="text/css">
+        .text-center{
+            text-align: center
+        }
+        .text-left{
+            text-align: left;
+        }
+        .vertical-middle{
+            vertical-align:middle
+        }
+    </style>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border ">
+                            <div class="card-header bg-transparent ">
+                                <button onclick="goDomainList()" class="btn btn-sm btn-outline-info waves-effect waves-light" >返回列表</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-dns-btn btn btn-sm btn-outline-info waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">解析</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-ssl-btn btn btn-sm btn-outline-success waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">SSL</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-cache-btn btn btn-sm btn-outline-secondary waves-effect" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">缓存配置</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button disabled class="domain-more-btn btn btn-sm btn-outline-primary waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">高级</button>
+                                <!-- <button class="domain-other-btn btn btn-sm btn-outline-warning waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">其他</button> -->
+                            </div>
+                            <div class="card-header bg-transparent">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>[[${domain}]]&nbsp;&nbsp;高级配置</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="fas fa-dumpster-fire text-success"></i>&nbsp;&nbsp; 防火墙</h4>
+                            </div>
+                            <div class="card-body border-bottom">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="my-0 text-primary"><i class="bx bx-sort-down"></i>&nbsp;&nbsp;安全级别</h5>
+                                        <hr style="width: 100px"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <p>调整您网站的安全级别，确定哪些访问者将收到质询页面。</p>
+                                    </div>
+                                    <div class="col-lg-4 d-grid gap-2">
+                                        <select class="form-select five-cc-dun">
+                                            <option value="essentially_off">关</option>
+                                            <option value="low">低</option>
+                                            <option value="medium">中</option>
+                                            <option value="high">高</option>
+                                            <option value="under_attack">5秒盾</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body border-bottom">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="my-0 text-primary"><i class="fas fa-stopwatch-20"></i>&nbsp;&nbsp;质询通过期</h5>
+                                        <hr style="width: 110px"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <p>指定访问者（已成功完成 Captcha 或 JavaScript 质询）可以访问您的网站的时长。当配置的超时过期时，网站将向访问者发出新的质询。质询通过期不适用于速率限制。</p>
+                                    </div>
+                                    <div class="col-lg-4 d-grid gap-2">
+                                        <select class="form-select challenge_ttl">
+                                            <option value="300">5分钟</option>
+                                            <option value="900">15分钟</option>
+                                            <option value="1800">30分钟</option>
+                                            <option value="2700">45分钟</option>
+                                            <option value="3600">1小时</option>
+                                            <option value="7200">2小时</option>
+                                            <option value="10800">3小时</option>
+                                            <option value="14400">4小时</option>
+                                            <option value="28800">8小时</option>
+                                            <option value="57600">16小时</option>
+                                            <option value="86400">1天</option>
+                                            <option value="604800">1周</option>
+                                            <option value="2678400">1个月</option>
+                                            <option value="31536000">1年</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body border-bottom">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="my-0 text-primary"><i class="fas fa-terminal"></i>&nbsp;&nbsp;浏览器完整性检查</h5>
+                                        <hr style="width: 165px"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <p>评估访问者浏览器的 HTTP 标头，以检查是否存在威胁。如果发现威胁，将显示阻止页面。</p>
+                                    </div>
+                                    <div class="col-lg-4 d-grid gap-2">
+                                        <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                            <input type="checkbox" class="form-check-input browser_check">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="my-0 text-primary"><i class="fas fa-unlock-alt"></i>&nbsp;&nbsp;Privacy Pass 支持</h5>
+                                        <hr style="width: 165px"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <p>Privacy Pass 是由 Privacy Pass 团队开发的一个浏览器扩展，用于改善访问者的浏览体验。</p>
+                                        <p>启用 Privacy Pass 将减少向访问者显示的 CAPTCHA。</p>
+                                    </div>
+                                    <div class="col-lg-4 d-grid gap-2">
+                                        <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                            <input type="checkbox" class="form-check-input privacy_pass">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<panel th:replace="web/free/common/free :: #js"></panel>
+<script>
+    
+    $(document).on("change",".five-cc-dun",function(){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",value:$(this).val(),settingType:"security_level"}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("更新成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(document).on("change",".challenge_ttl",function(){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",value:$(this).val(),settingType:"challenge_ttl"}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("更新成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(document).on('click','.browser_check',function(e){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {
+            domainId:"[[${domainId}]]",
+            value:$(this).is(":checked")?"on":"off",
+            settingType:"browser_check"
+        }, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(document).on('click','.privacy_pass',function(e){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {
+            domainId:"[[${domainId}]]",
+            value:$(this).is(":checked")?"on":"off",
+            settingType:"privacy_pass"
+        }, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    
+    
+    $(function(){
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"security_level"}, function (res) {
+            if (res.flag) {
+                $(".five-cc-dun").val(res.data.value);
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"challenge_ttl"}, function (res) {
+            if (res.flag) {
+                $(".challenge_ttl").val(res.data.value);
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"browser_check"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $(".browser_check").prop("checked",true);
+                }else{
+                    $(".browser_check").prop("checked",false);
+                }
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"privacy_pass"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $(".privacy_pass").prop("checked",true);
+                }else{
+                    $(".privacy_pass").prop("checked",false);
+                }
+            }
+        }, 'json');
+    })
+    
+</script>
+</body>
+</html>

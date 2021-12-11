@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SSL - [[${domain}]] - CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+    <style type="text/css">
+        .text-center{
+            text-align: center
+        }
+        .text-left{
+            text-align: left;
+        }
+        .vertical-middle{
+            vertical-align:middle
+        }
+    </style>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border ">
+                            <div class="card-header bg-transparent ">
+                                <button onclick="goDomainList()" class="btn btn-sm btn-outline-info waves-effect waves-light" >返回列表</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-dns-btn btn btn-sm btn-outline-info waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">解析</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-ssl-btn btn btn-sm btn-outline-success waves-effect waves-light" th:data-ns="${nsType}" disabled th:data-name="${domain}" th:data-id="${domainId}">SSL</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-cache-btn btn btn-sm btn-outline-secondary waves-effect" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">缓存配置</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-more-btn btn btn-sm btn-outline-primary waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">高级</button>
+                                <!-- <button class="domain-other-btn btn btn-sm btn-outline-warning waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">其他</button> -->
+                            </div>
+                            <div class="card-header bg-transparent ">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>[[${domain}]]&nbsp;&nbsp;SSL/TLS管理</h4>
+                            </div>
+                            <div class="card-body">
+                                <table id="ssl-list-tables" class="table table-bordered dt-responsive nowrap w-100">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card ">
+                            <div class="card-header ">
+                                <h4 class="card-title">高级选项</h4>
+                                <p class="card-title-desc">切换一些默认SSL/TLS开关</p>
+                            </div><!-- end card header -->
+                            <div class="card-body ">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <div class="form-check form-switch form-switch-md mb-3" style="padding-left: 0px" dir="ltr">
+                                        <label style="float: left;" class="form-check-label" for="alwaysHttps">强制HTTPS</label>
+                                        <input style="margin-left: 5px;" type="checkbox" class="form-check-input" id="alwaysHttps">
+                                    </div>
+                                    <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                        <label style="float: left;" class="form-check-label" for="https301">HTTP -> HTTPS</label>
+                                        <input style="margin-left: 5px;" type="checkbox" class="form-check-input" id="https301">
+                                    </div>
+                                    <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                        <label style="float: left;" class="form-check-label" for="ssl">全局SSL</label>
+                                        <input style="margin-left: 5px;" type="checkbox" class="form-check-input" id="ssl">
+                                    </div>
+                                    <div class="btn-group" style="margin-left: 2.5em">
+                                        <button id="sslsetting" type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                            SSL加密方式 <i class="mdi mdi-chevron-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu" style="">
+                                            <a class="dropdown-item" onclick="updateSslSetting('off')" style="font-size: 25px;display: flex;" href="#"><span style="font-size: 15px">关闭&nbsp;&nbsp;</span><i class="bx bxl-chrome"></i> -- <i class="bx bxl-soundcloud"></i> -- <i class="bx bx-server"></i></a>
+                                            <a class="dropdown-item" onclick="updateSslSetting('flexible')" style="font-size: 25px;display: flex;" href="#"><span style="font-size: 15px">半程&nbsp;&nbsp;</span><i class="bx bxl-chrome"></i> -<i style="font-size: 10px" class="bx bx-lock-alt text-success"></i>- <i class="bx bxl-soundcloud"></i> -- <i class="bx bx-server"></i></a>
+                                            <a class="dropdown-item" onclick="updateSslSetting('full')" style="font-size: 25px;display: flex;" href="#"><span style="font-size: 15px">简易&nbsp;&nbsp;</span><i class="bx bxl-chrome"></i> -<i style="font-size: 10px" class="bx bx-lock-alt text-success"></i>- <i class="bx bxl-soundcloud"></i> -<i style="font-size: 10px" class="bx bx-lock-alt text-danger"></i>- <i class="bx bx-server"></i></a>
+                                            <a class="dropdown-item" onclick="updateSslSetting('strict')" style="font-size: 25px;display: flex;" href="#"><span style="font-size: 15px">严格&nbsp;&nbsp;</span><i class="bx bxl-chrome"></i> -<i style="font-size: 10px" class="bx bx-lock-alt text-success"></i>- <i class="bx bxl-soundcloud"></i> -<i style="font-size: 10px" class="bx bx-lock-alt text-success"></i>- <i class="bx bx-server"></i></a>
+                                        </div>
+                                    </div><!-- /btn-group -->
+                                </div>
+                            </div><!-- end card-body -->
+                        </div><!-- end card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<panel th:replace="web/free/common/free :: #js"></panel>
+<script>
+    $(function(){
+        $.post("[[${path}]]/domain/free/getHttpToHttpsState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $("#https301").prop("checked",true);
+                }else{
+                    $("#https301").prop("false",true);
+                }
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+        $(document).on("change","#https301",function(){
+            loading.show();
+            $.post("[[${path}]]/domain/free/updateHttpToHttpsState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",state:$(this).is(":checked")}, function (res) {
+                loading.hide();
+                if (res.flag) {
+                    toastr.success("修改成功")
+                } else {
+                    toastr.error(res.msg);
+                }
+            }, 'json').fail(function () {
+                loading.hide();
+                toastr.error("连接服务器失败");
+            });
+        })
+    })
+    $(function(){
+        $.post("[[${path}]]/domain/free/getAlwaysHttpsState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $("#alwaysHttps").prop("checked",true);
+                }else{
+                    $("#alwaysHttps").prop("false",true);
+                }
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+        $(document).on("change","#alwaysHttps",function(){
+            loading.show();
+            $.post("[[${path}]]/domain/free/updateAlwaysHttpsState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",state:$(this).is(":checked")}, function (res) {
+                loading.hide();
+                if (res.flag) {
+                    toastr.success("修改成功")
+                } else {
+                    toastr.error(res.msg);
+                }
+            }, 'json').fail(function () {
+                loading.hide();
+                toastr.error("连接服务器失败");
+            });
+        })
+    })
+    $(function(){
+        $.post("[[${path}]]/domain/free/getGlobalSslState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                if(res.data.enabled){
+                    $("#ssl").prop("checked",true);
+                }else{
+                    $("#ssl").prop("false",true);
+                }
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+        $(document).on("change","#ssl",function(){
+            loading.show();
+            $.post("[[${path}]]/domain/free/updateGlobalSslState?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",state:$(this).is(":checked")}, function (res) {
+                loading.hide();
+                if (res.flag) {
+                    toastr.success("状态修改成功")
+                } else {
+                    toastr.error(res.msg);
+                }
+            }, 'json').fail(function () {
+                loading.hide();
+                toastr.error("连接服务器失败");
+            });
+        })
+    })
+    $(function(){
+        $.post("[[${path}]]/domain/free/getSslSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                let stat="";
+                if(res.data.value=="off"){
+                    stat="关闭";
+                }else if(res.data.value=="flexible"){
+                    stat="半程";
+                }else if(res.data.value=="full"){
+                    stat="简易";
+                }else if(res.data.value=="strict"){
+                    stat="严格";
+                }
+                $("#sslsetting").html("SSL加密方式("+stat+")<i class=\"mdi mdi-chevron-down\"></i>");
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    })
+    function updateSslSetting(type){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updateSslSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",type}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+                let stat="";
+                if(type=="off"){
+                    stat="关闭";
+                }else if(type=="flexible"){
+                    stat="半程";
+                }else if(type=="full"){
+                    stat="简易";
+                }else if(type=="strict"){
+                    stat="严格";
+                }
+                $("#sslsetting").html("SSL加密方式("+stat+")<i class=\"mdi mdi-chevron-down\"></i>");
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    }
+</script>
+<script>
+    var oTable;
+function loadDataTables(){
+    oTable=$("#ssl-list-tables").DataTable({
+        "serverSide": false,
+        "processing": false,
+        "paging": true,
+        "ordering":false,
+        "searching":false,
+        "scrollX": true,
+        "pageLength": 10,
+        "responsive":false,
+        "pagingType": "full_numbers",
+        "bLengthChange":false,
+        "ajax":{
+            url:"[[${path}]]/domain/free/sslSetting",
+            type:"post",
+            data:function (data) { // 定义初始化参数 :data为向后台发送的参数obj
+                return $.extend( {},{}, { //自定义参数
+                    //"pageNum": data.start/data.length+1 , //当前页
+                    //"pageSize": data.length, // 每页显示条数，data.length='pageLength'属性的值 我设置的是5
+                    "domainId":"[[${domainId}]]"
+                } )
+            },
+            beforeSend: function() {
+                loading.show();
+            },
+            complete: function(a,b) {
+                loading.hide();
+            },
+            dataSrc: function (json) {
+                if(!json.flag){
+                    Swal.fire("错误", json.msg, "error")
+                    json.iTotalDisplayRecords=0;
+                    return [];
+                }
+                return json.data;
+            }
+        },
+        "columns":[{
+            data:"hosts",
+            className:"text-left vertical-middle",
+            title: "记录",
+            render: function (data, type, full, meta) {
+                return data[0];
+            }
+        },{
+            data:"status",
+            title: "状态",
+            sWidth:"90px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) {
+                if(data=="active"){
+                    data="<span class='text-success'>有效</span>"
+                }else if(data=="pending_validation"){
+                    data="<span class='text-warning'>验证中</span>"
+                }else if(data=="pending_deployment"){
+                    data="<span class='text-danger'>待进行</span>"
+                }else{
+                    data="<span class='text-danger'>"+data+"</span>"
+                }
+                return data;
+            }
+        },{
+            data:"validation_records",
+            title: "链接/记录[颁发商]",
+            className:"text-left vertical-middle",
+            render: function (data, type, full, meta) {
+                if(full.status=="pending_validation"){
+                    if(data[0].http_url){
+                        data=data[0].http_url
+                    }else if(data[0].txt_name){
+                        data=data[0].txt_name
+                    }else if(data[0].cname){
+                        data=data[0].cname
+                    }else if(data[0].emails){
+                        let em="";
+                        for (let i = 0; i < data[0].emails.length ; i++) {
+                            em+=data[0].emails[i]+"<br/>";
+                        }
+                        data=em;
+                    }else{
+                        data="暂时无法获取"
+                    }
+                }else if(full.status=="active"){
+                    data=full.certificates[0].issuer;
+                }else{
+                    data="";
+                }
+                return data;
+            }
+        },{
+            data:"validation_records",
+            title: "内容/值[有效期]",
+            sWidth:"200px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) {
+                if(full.status=="pending_validation"){
+                    if(data[0].http_body){
+                        data=data[0].http_body
+                    }else if(data[0].txt_value){
+                        data=data[0].txt_value
+                    }else if(data[0].cname_target){
+                        data=data[0].cname_target
+                    }else if(data[0].emails){
+                        data="请登录任意一个邮箱自行验证";
+                    }else{
+                        data="<span class='text-danger'>"+data+"</span>"
+                    }
+                }else if(full.status=="active"){
+                    data=full.certificates[0].expires_on.replace("T","&nbsp;&nbsp;").replace(".000000Z","");
+                }else{
+                    data="";
+                }
+                return data;
+            }
+        },{
+            data:"validation_method",
+            title: "类型",
+            sWidth:"50px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) {
+                if(full.status=="pending_validation"){
+                    data='<select data-id="'+ full.id +'" class="validation_method_select">'+
+                        '<option '+(data=='http'?'selected':'')+' value="http">HTTP</option>'+
+                        '<option '+(data=='txt'?'selected':'')+' value="txt">TXT</option>'+
+                        '<option '+(data=='cname'?'selected':'')+' value="cname">CNAME</option>'+
+                        '<option '+(data=='email'?'selected':'')+' value="email">Email</option>'+
+                        '</select>';
+                }
+                return data;
+            },
+        }],
+        "fnDrawCallback" :  function ( oSettings ) {
+        },
+        "language":{
+            "sLengthMenu": "每页显示 _MENU_ 条记录",
+            "sZeroRecords": "对不起，查询不到任何相关数据",
+            "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+            "sInfoEmtpy": "找不到相关数据",
+            "sInfoFiltered": "",
+            "sProcessing": "<button type=\"button\" class=\"btn btn-info waves-effect\">" +
+                "<i class=\"bx bx-hourglass bx-spin font-size-16 align-middle me-2\"></i> Loading...</button>",
+            "sSearch": "精确查找",
+            "oPaginate": {
+                "sFirst": "《",
+                "sPrevious": " <",
+                "sNext": " > ",
+                "sLast": " 》 "
+            }
+        },
+    });
+}
+
+$(function(){
+    loadDataTables();
+})
+$(document).on('change', '.validation_method_select', function() {
+    loading.show();
+    let packId = $(this).data("id");
+    let domainId="[[${domainId}]]";
+    let type = $(this).val();
+    $.post("[[${path}]]/domain/free/changeValidationMethod?_=" + new Date().getTime(), {packId,domainId,type}, function (res) {
+        loading.hide();
+        if (res.flag) {
+            toastr.success("操作成功")
+            oTable.ajax.reload();
+        } else {
+            toastr.error(res.msg);
+        }
+    }, 'json').fail(function () {
+        loading.hide();
+        toastr.error("连接服务器失败");
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border ">
+                            <div class="card-header bg-transparent ">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>填入域名开始接入</h4>
+                                <p class="card-title-desc">开始接入前请保证您已绑定CloudFlare账号</p>
+                            </div>
+                            <div class="card-body">
+                                <form action="domain" id="addDomainForm" method="post">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div>
+                                                <div class="mb-3">
+                                                    <label for="domain" class="form-label">主域名</label>
+                                                    <input class="form-control" type="text" placeholder="baidu.com" id="domain" name="domain">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="d-grid gap-2">
+                                        <button type="button" id="submit" class="btn btn-info btn-lg waves-effect waves-light">立即接入</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">免费计划说明</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p><a th:href="@{/bindCloudFlareAccount}" target="_blank">点我去绑定CloudFlare账号</a></p>
+                        <p class="text-danger">1.如果您绑定的CloudFlare账户信息错误，无法请求CloudFlare，系统将会自动解除关联！</p>
+                        <p class="text-danger">2.即日起绑定免费域名需要NS验证接入，接入后按照提示更改域名DNS，待列表显示生效后即可换回原来的NS，在本网站使用</p>
+                        <p class="text-danger">3.绑定后可使用CNAME，但是切记，该CFP持有人仍可删除您的域名，请选择可靠商家接入</p>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<script>
+    $("#submit").click(function(){
+        Swal.fire({
+            title: "确认接入?",
+            text: $("#domain").val(),
+            icon: "warning",
+            showCancelButton: !0,
+            confirmButtonColor: "#2ab57d",
+            cancelButtonColor: "#fd625e",
+            confirmButtonText: "提交",
+            cancelButtonText: "取消"
+        }).then(function (e) {
+            if(!e.isDismissed) {
+                loading.show()
+                $.post("[[${path}]]/domain/free/addDomain/" + $("#domain").val() + "?_=" + new Date().getTime(), {domain: $("#domain").val()}, function (data) {
+                    loading.hide();
+                    if (data.flag) {
+                        Swal.fire("成功", data.msg, "success")
+                    } else {
+                        Swal.fire("错误", data.msg, "error")
+                    }
+                }, 'json').fail(function (e) {
+                    loading.hide();
+                    Swal.fire("错误", "连接服务端失败", "error")
+                })
+            }
+        })
+    })
+
+    $(function(){
+        $("#sslc").change(function(){
+            if($(this).is(":checked")){
+                $("#ssl").prop("checked",true);
+            }else{
+                $("#unssl").prop("checked",true);
+            }
+        });
+    })
+</script>
+</body>
+</html>

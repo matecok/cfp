@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>域名列表 - CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+    <style type="text/css">
+        .text-center{
+            text-align: center
+        }
+        .text-left{
+            text-align: left;
+        }
+        .vertical-middle{
+            vertical-align:middle
+        }
+    </style>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border ">
+                            <div class="card-header bg-transparent ">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>以下是您账号中的所有域名</h4>
+                                <p class="card-title-desc">本系统允许您对域名进行有限的操作</p>
+                            </div>
+                            <div class="card-body">
+                                <table id="domain-list-tables" class="table table-bordered dt-responsive nowrap w-100">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<panel th:replace="web/free/common/free :: #js"></panel>
+<script>
+    var oTable;
+function loadDataTables(){
+    oTable=$("#domain-list-tables").DataTable({
+        "serverSide": true,
+        "processing": false,
+        "paging": true,
+        "ordering":false,
+        "scrollX": true,
+        "pageLength": 10,
+        "responsive":false,
+        "pagingType": "full_numbers",
+        "bLengthChange":false,
+        "ajax":{
+            url:"[[${path}]]/domain/free/getDomainList",
+            type:"post",
+            data:function (data) { // 定义初始化参数 :data为向后台发送的参数obj
+                return $.extend( {},{}, { //自定义参数
+                    "pageNum": data.start/data.length+1 , //当前页
+                    "pageSize": data.length, // 每页显示条数，data.length='pageLength'属性的值 我设置的是5
+                    "search":data.search.value
+                } )
+            },
+            beforeSend: function() {
+                loading.show();
+            },
+            complete: function(a,b) {
+                loading.hide();
+            },
+            dataSrc: function (json) {
+                if(!json.flag){
+                    Swal.fire("错误", json.msg, "error")
+                    json.iTotalDisplayRecords=0;
+                    return [];
+                }
+                return json.data;
+            }
+        },
+        "columns":[{
+            data:"name",
+            className:"text-left vertical-middle",
+            title: "域名"
+        },{
+            data:"status",
+            title: "状态",
+            sWidth:"80px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) {
+                if(data==="active"){
+                    data="<span class='text-success'>已激活</span>"
+                }else if(data!="active"){
+                    data="<span class='text-danger'>待生效</span>"
+                }
+                return data;
+            },
+        },{
+            data:"type",
+            title: "接入方式",
+            sWidth:"200px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) {
+                if(data==="full"){
+                    data="<span class='text-success'>官方接入（DNS）</span>"
+                }else if(data==="partial"){
+                    data="第三方接入（CNAME）"
+                }
+                return data;
+            },
+        },{
+            data:"id",
+            title: "操作",
+            sWidth:"400px",
+            className:"text-center vertical-middle",
+            render: function (data, type, full, meta) { 
+                let btn="";
+                btn+='<button class="domain-dns-btn btn btn-sm btn-outline-info waves-effect waves-light" data-ns="'+full.type+'" data-name="'+full.name+'" data-id="'+data+'">解析</button>&nbsp;&nbsp;&nbsp;&nbsp;'
+                btn+='<button class="domain-ssl-btn btn btn-sm btn-outline-success waves-effect waves-light" data-ns="'+full.type+'" data-name="'+full.name+'" data-id="'+data+'">SSL</button>&nbsp;&nbsp;&nbsp;&nbsp;'
+                btn+='<button class="domain-cache-btn btn btn-sm btn-outline-secondary waves-effect" data-ns="'+full.type+'" data-name="'+full.name+'" data-id="'+data+'">缓存配置</button>&nbsp;&nbsp;&nbsp;&nbsp;'
+                btn+='<button class="domain-more-btn btn btn-sm btn-outline-primary waves-effect" data-ns="'+full.type+'" data-name="'+full.name+'" data-id="'+data+'">高级</button>&nbsp;&nbsp;&nbsp;&nbsp;'
+                //btn+='<button class="domain-other-btn btn btn-sm btn-outline-warning waves-effect data-ns="'+data.type+'" waves-light" data-name="'+full.name+'" data-id="'+data+'">其他</button>&nbsp;&nbsp;&nbsp;&nbsp;'
+                btn+='<button class="domain-delete-btn btn btn-sm btn-outline-danger waves-effect waves-light" data-id="'+data+'">删除</button>'
+                return btn;
+            }
+        }],
+        "fnDrawCallback" :  function ( oSettings ) {
+           // tableLoadComplete()
+        },
+        "language":{
+            "sLengthMenu": "每页显示 _MENU_ 条记录",
+            "sZeroRecords": "对不起，查询不到任何相关数据",
+            "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+            "sInfoEmtpy": "找不到相关数据",
+            "sInfoFiltered": "",
+            "sProcessing": "<button type=\"button\" class=\"btn btn-info waves-effect\">" +
+                "<i class=\"bx bx-hourglass bx-spin font-size-16 align-middle me-2\"></i> Loading...</button>",
+            "sSearch": "精确查找",
+            "oPaginate": {
+                "sFirst": "《",
+                "sPrevious": " <",
+                "sNext": " > ",
+                "sLast": " 》 "
+            }
+        },
+    })
+}
+
+$(function(){
+    loadDataTables();
+})
+$(document).on('click', '.domain-delete-btn', function() {
+    let _this=this;
+    Swal.fire({
+        title: "确认删除?",
+        text: $("#domain").val(),
+        icon: "warning",
+        showCancelButton: !0,
+        confirmButtonColor: "#2ab57d",
+        cancelButtonColor: "#fd625e",
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+    }).then(function (e) {
+        if(!e.isDismissed){
+            loading.show();
+            var domainId=$(_this).data("id");
+            $.post("[[${path}]]/domain/free/deleteDomain?_="+new Date().getTime(),{domainId},function(res){
+                loading.hide();
+                if(res.flag){
+                    toastr.success("删除成功")
+                    oTable.row($(_this).parents('tr')[0]).remove().draw(false);
+                }else{
+                    toastr.error(res.msg);
+                }
+            },'json').fail(function(){
+                loading.hide();
+                toastr.error("连接服务器失败");
+            });
+        }
+    })
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+    <div id="layout-wrapper">
+        <panel th:replace="common/template :: #menu"></panel>
+        <div class="main-content">
+            <div class="page-content">
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">管理控制台</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-h-100">
+                            <!-- card body -->
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <span class="text-muted mb-3 lh-1 d-block text-truncate">我的域名</span>
+                                        <h4 class="mb-3" id="mydomaincountfree">
+                                            <i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="text-nowrap">
+                                    <span class="badge bg-soft-success text-success"></span>
+                                    <span class="ms-1 text-muted font-size-13"></span>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+                    <div class="col-xl-3 col-md-6">
+                        <!-- card -->
+                        <div class="card card-h-100">
+                            <!-- card body -->
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <span class="text-muted mb-3 lh-1 d-block text-truncate">最后登录</span>
+                                        <h4 class="mb-3" id="lastlogintime">
+                                            <i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="text-nowrap">
+                                    <span class="badge bg-soft-success text-success">登录IP:</span>
+                                    <span class="ms-1 text-muted font-size-13" id="lastloginip"><i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...</span>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+                </div>
+                <div class="card-header align-items-center">
+                </div>
+            </div>
+            <!-- End Page-content -->
+            <panel th:replace="common/template :: #footer"></panel>
+        </div>
+        <!-- 主面板结束 -->
+    </div>
+    <panel th:replace="common/template :: #right-bar"></panel>
+    <!-- dashboard init -->
+    <script th:src="@{/js/app.js}"></script>
+<script>
+    $(function(){
+        $.post("[[${path}]]/domain/free/getDomainList?_="+new Date().getTime(),{pageNum:1,pageSize:1},function(d){
+            if(d.flag){
+                $("#mydomaincountfree").html("<a href='[[${path}]]/domain/free/domainList'>"+d.iTotalDisplayRecords+"</a>")
+            }else{
+                $("#mydomaincountfree").html("<a href='[[${path}]]/bindCloudFlareAccount'>"+d.msg+"</a>")
+            }
+        },'json');
+        $.post("[[${path}]]/common/load/loginhistory?_="+new Date().getTime(),{},function(d){
+            if(d.flag&&d.data){
+                $("#lastlogintime").text(d.data.loginTime);
+                $("#lastloginip").text(d.data.loginIp);
+            }else{
+                $("#lastlogintime").text("第一次登陆");
+                $("#lastloginip").text("第一次登陆");
+            }
+        },'json');
+    })
+</script>
+</body>
+</html>

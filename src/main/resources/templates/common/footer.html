@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="w3agile_footer_copy" id="footer">
+    <p>Copyright © <span th:text="${#dates.format(date, 'yyyy')}"></span>.<span th:text="${['web.company.name']}"></span> All rights reserved.</p>
+</div>
+</body>
+</html>

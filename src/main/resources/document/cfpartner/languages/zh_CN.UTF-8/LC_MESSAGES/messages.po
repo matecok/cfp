@@ -1,0 +1,604 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-04-29 20:27+0800\n"
+"PO-Revision-Date: 2020-04-29 20:30+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: actions/add.php:18 actions/add.php:73 actions/add_record.php:35
+#: actions/delete_record.php:11 actions/dnssec.php:16
+#: actions/edit_record.php:42 actions/logout.php:12 actions/security.php:41
+#: actions/security.php:67 actions/security.php:82 actions/zone.php:52
+msgid "Success"
+msgstr "成功"
+
+#: actions/add.php:18 actions/add.php:73 actions/add_record.php:35
+#: actions/add_record.php:37 actions/delete_record.php:11
+#: actions/delete_record.php:13 actions/dnssec.php:16 actions/dnssec.php:18
+#: actions/logout.php:12 actions/zone.php:54 actions/zone.php:63
+msgid "Go to console"
+msgstr "前往管理中心"
+
+#: actions/add.php:45
+msgid "Cannot add a existing domain."
+msgstr "无法添加已经存在的域名."
+
+#: actions/add.php:88 actions/list_zones.php:26
+msgid "Domain"
+msgstr "域名"
+
+#: actions/add.php:89
+msgid "Please enter your domain"
+msgstr "请输入你的域名"
+
+#: actions/add.php:90 actions/add_record.php:143 actions/edit_record.php:147
+msgid "Submit"
+msgstr "提交"
+
+#: actions/add_record.php:35 actions/add_record.php:37 actions/zone.php:85
+msgid "Add New Record"
+msgstr "添加新记录"
+
+#: actions/add_record.php:35 actions/add_record.php:37
+msgid "Or"
+msgstr "或者"
+
+#: actions/add_record.php:37 actions/add_record.php:40
+#: actions/delete_record.php:13 actions/dnssec.php:18
+#: actions/edit_record.php:44 actions/edit_record.php:47
+#: actions/security.php:43 actions/security.php:69 actions/security.php:84
+#: actions/zone.php:54 actions/zone.php:63
+msgid "Failed"
+msgstr "失败"
+
+#: actions/add_record.php:45 actions/edit_record.php:8
+msgid "Back"
+msgstr "返回"
+
+#: actions/add_record.php:48
+msgid "Add DNS Record"
+msgstr "添加 DNS 记录"
+
+#: actions/add_record.php:50 actions/edit_record.php:57
+msgid "Record Name (e.g. “@”, “www”, etc.)"
+msgstr "记录名 (例 “@”, “www”, etc.)"
+
+#: actions/add_record.php:54 actions/edit_record.php:61 actions/zone.php:90
+msgid "Record Type"
+msgstr "记录类型"
+
+#: actions/add_record.php:70 actions/edit_record.php:116
+msgid "Record Content"
+msgstr "记录内容"
+
+#: actions/add_record.php:75 actions/add_record.php:109
+#: actions/edit_record.php:99 actions/edit_record.php:121
+msgid "Priority"
+msgstr "权重 (Priority)"
+
+#: actions/add_record.php:81 actions/edit_record.php:69
+msgid "Tag"
+msgstr "标签 (Tag)"
+
+#: actions/add_record.php:83 actions/edit_record.php:71
+msgid "Only allow specific hostnames"
+msgstr "仅允许特定主机名"
+
+#: actions/add_record.php:84 actions/edit_record.php:72
+msgid "Only allow wildcards"
+msgstr "仅允许通配符"
+
+#: actions/add_record.php:85 actions/edit_record.php:73
+msgid "Send violation reports to URL (http:, https:, or mailto:)"
+msgstr "发送违规报告到 URL (http:, https:, 或 mailto:)"
+
+#: actions/add_record.php:89 actions/edit_record.php:77
+msgid "Value"
+msgstr "值 (Value)"
+
+#: actions/add_record.php:97 actions/edit_record.php:83
+msgid "Service"
+msgstr "服务 (Service)"
+
+#: actions/add_record.php:101 actions/edit_record.php:87
+msgid "Proto"
+msgstr "协议 (Proto)"
+
+#: actions/add_record.php:113 actions/edit_record.php:103
+msgid "Weight"
+msgstr "权重 (Weight)"
+
+#: actions/add_record.php:117 actions/edit_record.php:107
+msgid "Port"
+msgstr "端口 (Port)"
+
+#: actions/add_record.php:121 actions/edit_record.php:111
+msgid "Target"
+msgstr "目标 (Target)"
+
+#: actions/add_record.php:139 actions/edit_record.php:141
+msgid "On"
+msgstr "开启"
+
+#: actions/add_record.php:140 actions/edit_record.php:142
+msgid "Off"
+msgstr "关闭"
+
+#: actions/analytics.php:14 actions/list_zones.php:42
+msgid "Advanced Analytics"
+msgstr "高级统计"
+
+#: actions/analytics.php:15
+msgid "Loading failed. Please refresh the page to retry."
+msgstr "加载失败，请刷新页面重试。"
+
+#: actions/analytics.php:58 actions/analytics.php:204
+msgid "Cached"
+msgstr "已缓存"
+
+#: actions/analytics.php:70 actions/analytics.php:216
+msgid "All"
+msgstr "全部"
+
+#: actions/analytics.php:88 actions/analytics.php:110 actions/analytics.php:161
+#: actions/analytics.php:183 actions/analytics.php:281
+msgid "Requests"
+msgstr "请求"
+
+#: actions/analytics.php:103 actions/analytics.php:176
+#: actions/analytics.php:249 actions/analytics.php:278
+msgid "Date"
+msgstr "日期"
+
+#: actions/analytics.php:131 actions/analytics.php:279
+msgid "Unique Visitors"
+msgstr "独立访客数"
+
+#: actions/analytics.php:143 actions/analytics.php:280
+msgid "Page Views"
+msgstr "页面浏览量"
+
+#: actions/analytics.php:234 actions/analytics.php:256
+msgid "Bandwidth (Unit: "
+msgstr "流量 (单位: "
+
+#: actions/analytics.php:282
+msgid "Requests Hit Ratio"
+msgstr "缓存命中率"
+
+#: actions/analytics.php:283
+msgid "Bandwidth"
+msgstr "流量"
+
+#: actions/analytics.php:284
+msgid "Saved Bandwidth"
+msgstr "节省流量"
+
+#: actions/analytics.php:285
+msgid "Threats"
+msgstr "攻击拦截"
+
+#: actions/analytics.php:291
+msgid "Total (Last year)"
+msgstr "总计 (最近一年)"
+
+#: actions/edit_record.php:55
+msgid "Edit DNS Record"
+msgstr "编辑 DNS 记录"
+
+#: actions/edit_record.php:95
+msgid "Name"
+msgstr "主机名"
+
+#: actions/list_zones.php:13 languages/translates.php:30
+msgid "Add Domain"
+msgstr "添加域名"
+
+#: actions/list_zones.php:15
+msgid "Home"
+msgstr "主页"
+
+#: actions/list_zones.php:20 actions/login2.php:15
+msgid "No Host API key found. You cannot add new domain to this service."
+msgstr "没有找到 Host API key。你不能添加新域名。"
+
+#: actions/list_zones.php:27
+msgid "Status"
+msgstr "状态"
+
+#: actions/list_zones.php:28 actions/zone.php:94
+msgid "Operation"
+msgstr "操作"
+
+#: actions/list_zones.php:43 actions/zone.php:136
+msgid "Manage"
+msgstr "管理"
+
+#: actions/list_zones.php:44 actions/list_zones.php:86
+msgid "Manage DNS"
+msgstr "管理 DNS"
+
+#: actions/list_zones.php:45 languages/translates.php:25
+msgid "Security"
+msgstr "安全"
+
+#: actions/list_zones.php:86
+msgid ""
+"This domain only supports NS setup. And you should manage DNS records on "
+"Cloudflare.com."
+msgstr "这个域名只支持 NS 接入. 你应该在 Cloudflare.com 上管理 DNS 记录."
+
+#: actions/list_zones.php:107 actions/zone.php:169 actions/zone.php:216
+msgid "Next"
+msgstr "下一页"
+
+#: actions/list_zones.php:111 actions/zone.php:173 actions/zone.php:220
+msgid "Previous"
+msgstr "上一页"
+
+#: actions/list_zones.php:113 actions/zone.php:175 actions/zone.php:222
+msgid "Page"
+msgstr "页码"
+
+#: actions/login.php:10 actions/login2.php:10
+msgid "Cloudflare CNAME/IP/NS Setup"
+msgstr "Cloudflare CNAME/IP/NS 接入"
+
+#: actions/login.php:12 actions/login2.php:19
+msgid "Please sign in"
+msgstr "请先登录"
+
+#: actions/login.php:13 actions/login.php:14 actions/login2.php:20
+#: actions/login2.php:21
+msgid "Your email address on cloudflare.com"
+msgstr "你在 cloudflare.com 上的邮箱"
+
+#: actions/login.php:15 actions/login.php:16
+msgid "Your password on cloudflare.com"
+msgstr "你在 cloudflare.com 上的密码"
+
+#: actions/login.php:19 actions/login2.php:27
+msgid "Remember me"
+msgstr "下次自动登录"
+
+#: actions/login.php:22 actions/login2.php:30
+msgid "Sign in"
+msgstr "登录"
+
+#: actions/login.php:23
+msgid "Use your existing account or create a new account here."
+msgstr "在这里登录你已有的账号或者注册新账号."
+
+#: actions/login.php:24 actions/login2.php:32
+msgid "We will not store any of your Cloudflare data"
+msgstr "我们不会存储你的任何 Cloudflare 数据"
+
+#: actions/login2.php:22 actions/login2.php:24
+msgid "Your global API key on cloudflare.com"
+msgstr "你在 cloudflare.com 上的 Global API key"
+
+#: actions/login2.php:24
+msgid "Your global API key. NOT your password."
+msgstr "请输入 Global API Key，而不是你的账户密码."
+
+#: actions/login2.php:31
+msgid "How to get my global API key?"
+msgstr "如何获取我的 Global API Key？"
+
+#: actions/security.php:21
+msgid "SSL Verify"
+msgstr "SSL 验证"
+
+#: actions/security.php:35
+#, php-format
+msgid "HTTP File Verify for %s"
+msgstr "%s 下的 HTTP 文件验证"
+
+#: actions/security.php:39 actions/security.php:65 actions/security.php:80
+msgid "SSL Status"
+msgstr "SSL 状态"
+
+#: actions/security.php:41 actions/security.php:43 actions/security.php:67
+#: actions/security.php:69 actions/security.php:82 actions/security.php:84
+msgid "Verify"
+msgstr "验证"
+
+#: actions/security.php:47
+msgid "CNAME Verify"
+msgstr "CNAME 验证"
+
+#: actions/security.php:51
+msgid "SSL Verification Record Name"
+msgstr "SSL 验证记录名"
+
+#: actions/security.php:74
+msgid ""
+"<p style=\"color:green;\">No error for SSL.</p><p>Just point the record(s) "
+"to Cloudflare and the SSL certificate will be issued and renewed "
+"automatically.</p>"
+msgstr ""
+"<p style=\"color:green;\">SSL 正常。</p><p>你只需要将默认/海外记录指向 "
+"Cloudflare, SSL 证书便会自动签发和续期。</p>"
+
+#: actions/security.php:91
+msgid "DNSSEC <small>(Only for NS setup)</small>"
+msgstr "DNSSEC <small>(仅限 NS 接入)</small>"
+
+#: actions/security.php:93 actions/security.php:110
+msgid ""
+"This feature is designed for users who use Cloudflare DNS setup. If you are "
+"using third-party DNS services, do not turn it on nor add DS record, "
+"otherwise your domain may become inaccessible."
+msgstr ""
+"此功能仅限配置了 Cloudflare DNS 的用户使用, 如果你使用的是第三方 DNS 服务，请"
+"不要开启此功能，也不要配置 DS 记录, 否则可能会导致域名无法访问。"
+
+#: actions/security.php:103
+msgid "Activated"
+msgstr "已激活"
+
+#: actions/security.php:104 actions/security.php:107
+msgid "Deactivate"
+msgstr "关闭"
+
+#: actions/security.php:106 languages/translates.php:17
+msgid "Pending"
+msgstr "等待中"
+
+#: actions/security.php:109
+msgid "Not Activated"
+msgstr "未激活"
+
+#: actions/security.php:110
+msgid "Activate"
+msgstr "开启"
+
+#: actions/zone.php:61
+msgid "Success!"
+msgstr "成功！"
+
+#: actions/zone.php:73
+msgid "Contents"
+msgstr "目录"
+
+#: actions/zone.php:76 actions/zone.php:84
+msgid "DNS Management"
+msgstr "DNS 管理"
+
+#: actions/zone.php:77 actions/zone.php:180
+msgid "CNAME Setup"
+msgstr "CNAME 接入"
+
+#: actions/zone.php:78 actions/zone.php:235
+msgid "IP Setup"
+msgstr "IP 接入"
+
+#: actions/zone.php:79 actions/zone.php:251
+msgid "NS Setup"
+msgstr "NS 接入"
+
+#: actions/zone.php:81 actions/zone.php:277 actions/zone.php:278
+msgid "More Settings"
+msgstr "更多设置"
+
+#: actions/zone.php:91 actions/zone.php:184 actions/zone.php:255
+msgid "Host Name"
+msgstr "主机名"
+
+#: actions/zone.php:92
+msgid "Content"
+msgstr "内容"
+
+#: actions/zone.php:93 actions/zone.php:143
+msgid "TTL"
+msgstr "TTL"
+
+#: actions/zone.php:131
+msgid "record"
+msgstr "记录"
+
+#: actions/zone.php:133 actions/zone.php:196 actions/zone.php:262
+#: actions/zone.php:268
+msgid "points to"
+msgstr "指向"
+
+#: actions/zone.php:139 actions/zone.php:149
+msgid "Edit"
+msgstr "编辑"
+
+#: actions/zone.php:140 actions/zone.php:150
+msgid "Are you sure to delete"
+msgstr "你确认要删除"
+
+#: actions/zone.php:140 actions/zone.php:150
+msgid "Delete"
+msgstr "删除"
+
+#: actions/zone.php:161 actions/zone.php:208
+msgid "There is no record in this zone yet. Please add some!"
+msgstr "该域名还没有任何记录, 请添加!"
+
+#: actions/zone.php:178
+msgid "You can use CNAME, IP or NS to set it up."
+msgstr "你可以使用 CNAME, IP 和 NS 任意一种方式接入。"
+
+#: actions/zone.php:278
+msgid ""
+"This site only provides configurations that the official does not have. For "
+"more settings, such as Page Rules, Crypto, Firewall, Cache, etc., please use "
+"the same account to login Cloudflare.com to setup. "
+msgstr ""
+"本站只提供官网之外的配置。更多设置，如 Page Rules、SSL 回源配置、防火墙、缓存"
+"配置等，请使用相同账号登录 Cloudflare.com 查看. "
+
+#: cloudflare.class.php:69
+msgid "Error, please confirm your domain."
+msgstr "错误，请检查你的域名."
+
+#: cloudflare.class.php:157
+msgid "Updated successful."
+msgstr "更新成功."
+
+#: cloudflare.class.php:157 cloudflare.class.php:159
+msgid "Back to domain"
+msgstr "返回到域名"
+
+#: index.php:25 index.php:59
+msgid ""
+"You have been blocked since you have too many fail logins. You can try it in "
+"next hour."
+msgstr "由于你多次登录失败，已经被屏蔽，请在下一个小时再试。"
+
+#: index.php:67
+msgid ""
+"An error occurred. You might have provided an error email and API key pair."
+msgstr "发生了一个错误。你可能提供了一组错误的邮箱和 API 对。"
+
+#: index.php:121 index.php:159
+msgid "Console"
+msgstr "面板"
+
+#: index.php:124 settings.php:73
+msgid "Cloudflare CNAME/IP Advanced Setup"
+msgstr "Cloudflare CNAME/IP 高级接入"
+
+#: index.php:163 languages/translates.php:24
+msgid "Logout"
+msgstr "退出登录"
+
+#: index.php:220
+msgid "Cloudflare Support"
+msgstr "Cloudflare 支持"
+
+#: index.php:221 settings.php:110
+msgid "View on GitHub"
+msgstr "在 GitHub 上查看"
+
+#: languages/translates.php:3
+msgid "Automatic"
+msgstr "自动"
+
+#: languages/translates.php:4
+msgid "2 mins"
+msgstr "2 分钟"
+
+#: languages/translates.php:5
+msgid "5 mins"
+msgstr "5 分钟"
+
+#: languages/translates.php:6
+msgid "10 mins"
+msgstr "10 分钟"
+
+#: languages/translates.php:7
+msgid "15 mins"
+msgstr "15 分钟"
+
+#: languages/translates.php:8
+msgid "30 mins"
+msgstr "30 分钟"
+
+#: languages/translates.php:9
+msgid "1 hour"
+msgstr "1 小时"
+
+#: languages/translates.php:10
+msgid "2 hours"
+msgstr "2 小时"
+
+#: languages/translates.php:11
+msgid "5 hours"
+msgstr "5 小时"
+
+#: languages/translates.php:12
+msgid "12 hours"
+msgstr "12 小时"
+
+#: languages/translates.php:13
+msgid "1 day"
+msgstr "1 天"
+
+#: languages/translates.php:16
+msgid "Active"
+msgstr "已激活"
+
+#: languages/translates.php:18
+msgid "Initializing"
+msgstr "初始化中"
+
+#: languages/translates.php:19
+msgid "Moved"
+msgstr "已移动"
+
+#: languages/translates.php:21
+msgid "Deactivated"
+msgstr "未激活"
+
+#: languages/translates.php:26
+msgid "Add Record"
+msgstr "添加记录"
+
+#: languages/translates.php:27
+msgid "Edit Record"
+msgstr "编辑记录"
+
+#: languages/translates.php:28
+msgid "Delete Record"
+msgstr "删除记录"
+
+#: languages/translates.php:29
+msgid "Analytics"
+msgstr "统计"
+
+#: languages/translates.php:31
+msgid "Manage Zone"
+msgstr "管理域名"
+
+#: languages/translates.php:32
+msgid "DNSSEC"
+msgstr "DNSSEC"
+
+#: languages/translates.php:33
+msgid "Login"
+msgstr "登录"
+
+#: settings.php:73 settings.php:89
+msgid "Error"
+msgstr "错误"
+
+#: settings.php:96
+msgid "Cannot find the file:"
+msgstr "找不到文件："
+
+#: settings.php:99
+msgid ""
+"It probably means that <code>composer</code> dependencies are not installed "
+"properly."
+msgstr "或许 <code>composer</code> 依赖没有被正确安装。"
+
+#: settings.php:100
+msgid "You will need to run the following codes to install the dependencies:"
+msgstr "你需要运行下方代码以安装这些依赖："
+
+#: settings.php:103
+msgid ""
+"If you do not have the <code>composer</code>, install it first (you may need "
+"to run it with <code>sudo</code>):"
+msgstr ""
+"如果你还没有 <code>composer</code>，请先安装 (你可能需要使用 <code>sudo</"
+"code>)："
+
+#~ msgid "No HOST_KEY or HOST_MAIL defined in config.php ."
+#~ msgstr "没有在 config.php 中设置 HOST_KEY 或 HOST_MAIL ."
+
+#~ msgid "Please set up your own HOST_KEY and HOST_MAIL in config.php ."
+#~ msgstr "请在 config.php 中设置你自己的 HOST_KEY 和 HOST_MAIL."

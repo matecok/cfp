@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="js" th:remove="tag">
+    <script>
+        function goDomainList(){
+            top.location.href = "[[${path}]]/domain/free/domainList";
+        }
+        $(document).on('click', '.domain-dns-btn', function() {
+            var domainId=$(this).data("id");
+            var domainName=$(this).data("name");
+            var nsType=$(this).data("ns");
+            top.location.href="[[${path}]]/domain/free/dns?nsType="+nsType+"&domain="+domainName+"&domainId="+domainId+"&_="+new Date().getTime();
+        })
+        $(document).on('click', '.domain-ssl-btn', function() {
+            var domainId=$(this).data("id");
+            var domainName=$(this).data("name");
+            var nsType=$(this).data("ns");
+            top.location.href="[[${path}]]/domain/free/ssl?nsType="+nsType+"&domain="+domainName+"&domainId="+domainId+"&_="+new Date().getTime();
+        })
+        $(document).on('click', '.domain-cache-btn', function() {
+            var domainId=$(this).data("id");
+            var domainName=$(this).data("name");
+            var nsType=$(this).data("ns");
+            top.location.href="[[${path}]]/domain/free/cache?nsType="+nsType+"&domain="+domainName+"&domainId="+domainId+"&_="+new Date().getTime();
+        })
+        $(document).on('click', '.domain-more-btn', function() {
+            var domainId=$(this).data("id");
+            var domainName=$(this).data("name");
+            var nsType=$(this).data("ns");
+            top.location.href="[[${path}]]/domain/free/more?nsType="+nsType+"&domain="+domainName+"&domainId="+domainId+"&_="+new Date().getTime();
+        })
+        $(document).on('click', '.domain-other-btn', function() {
+            var domainId=$(this).data("id");
+
+        })
+    </script>
+</div>
+</body>
+</html>

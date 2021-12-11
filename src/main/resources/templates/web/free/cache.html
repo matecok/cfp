@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>缓存配置 - [[${domain}]] - CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+    <style type="text/css">
+        .text-center{
+            text-align: center
+        }
+        .text-left{
+            text-align: left;
+        }
+        .vertical-middle{
+            vertical-align:middle
+        }
+    </style>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border ">
+                            <div class="card-header bg-transparent ">
+                                <button onclick="goDomainList()" class="btn btn-sm btn-outline-info waves-effect waves-light" >返回列表</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-dns-btn btn btn-sm btn-outline-info waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">解析</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-ssl-btn btn btn-sm btn-outline-success waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">SSL</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button disabled class="domain-cache-btn btn btn-sm btn-outline-secondary waves-effect" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">缓存配置</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="domain-more-btn btn btn-sm btn-outline-primary waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">高级</button>
+                                <!-- <button class="domain-other-btn btn btn-sm btn-outline-warning waves-effect waves-light" th:data-ns="${nsType}" th:data-name="${domain}" th:data-id="${domainId}">其他</button> -->
+                            </div>
+                            <div class="card-header bg-transparent">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>[[${domain}]]&nbsp;&nbsp;缓存管理</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-cached me-3"></i>清除缓存</h4>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-lg-8">
+                                    <p>清除缓存文件以强制 Cloudflare 从您的 Web 服务器中提取这些文件的最新版本。您可以选择性地清除文件，也可以同时清除所有文件。</p>
+                                    
+                                    <p>注意：清除缓存可能会使您的网站性能暂时降级，并延长在您的源服务器上加载文件的时间。</p>
+                                </div>
+                                <div class="col-lg-4 d-grid gap-2">
+                                    <button type="button" class="clean-cache-urls btn btn-success btn-lg waves-effect waves-light">指定URL</button>
+                                    <button type="button" class="clean-cache-all btn btn-warning btn-lg waves-effect waves-light">清除所有</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="bx bx-sort-down"></i>&nbsp;&nbsp;缓存级别</h4>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-lg-8">
+                                    <p>确定您希望 Cloudflare 对您的网站进行缓存的静态内容量。增加缓存可以缩短页面加载时间。</p>
+                                </div>
+                                <div class="col-lg-4 d-grid gap-2">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="cacheLevel" value="basic" id="nosearchstr">
+                                        <label class="form-check-label" for="nosearchstr">
+                                            没有查询字符串
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="cacheLevel" value="simplified" id="inosearchstr">
+                                        <label class="form-check-label" for="inosearchstr">
+                                            忽略查询字符串
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="cacheLevel" value="aggressive" id="standard">
+                                        <label class="form-check-label" for="standard">
+                                            标准
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-book-clock-outline me-3"></i>缓存时间</h4>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-lg-8">
+                                    <p>确定 Cloudflare 指示访问者的浏览器缓存文件的时长。在此期间，浏览器会从其本地缓存中加载文件，从而提高页面加载速度。</p>
+                                </div>
+                                <div class="col-lg-4 d-grid gap-2">
+                                    <select class="form-select cache-select-time">
+                                        <option value="0">遵循现有标头</option>
+                                        <option value="3600">1小时</option>
+                                        <option value="7200">2小时</option>
+                                        <option value="10800">3小时</option>
+                                        <option value="14400">4小时</option>
+                                        <option value="18000">5小时</option>
+                                        <option value="28800">8小时</option>
+                                        <option value="43200">12小时</option>
+                                        <option value="57600">16小时</option>
+                                        <option value="72000">20小时</option>
+                                        <option value="86400">1天</option>
+                                        <option value="172800">2天</option>
+                                        <option value="259200">3天</option>
+                                        <option value="345600">4天</option>
+                                        <option value="432000">5天</option>
+                                        <option value="691200">8天</option>
+                                        <option value="1382400">16天</option>
+                                        <option value="2073600">24天</option>
+                                        <option value="2678400">1个月</option>
+                                        <option value="5356800">2个月</option>
+                                        <option value="16070400">6个月</option>
+                                        <option value="31536000">1年</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="fab fa-battle-net me-3"></i>Always Online™<sup style="background: rgb(251, 205, 165);border-radius: 50%">&nbsp;&nbsp;Bate&nbsp;&nbsp;</sup></h4>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-lg-8">
+                                    <p>源服务器不可用时让访问者仍可访问您的网站。Cloudflare 可通过<a target="_blank" href="https://archive.org/web/">Internet Archive 的 Wayback Machine </a> 提供有限的网页副本。</p>
+
+                                    <p>启用此服务会将您网站的某些信息共享给 Internet Archive，以使此功能正常运行。启用此服务，即表示您同意 Always Online 的 <a target="_blank" href="https://www.cloudflare.com/supplemental-terms/#AOBeta">补充条款</a></p>
+                                </div>
+                                <div class="col-lg-4 d-grid gap-2">
+                                    <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                        <input type="checkbox" class="form-check-input always_online">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-dev-to me-3"></i>开发模式</sup></h4>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-lg-8">
+                                    <p>暂时绕过我们的缓存可以实时查看对您的源服务器进行的更改。</p>
+
+                                    <p>注意：启用此功能可显著加快源服务器的加载速度。开发模式不会清除缓存，因此需要在开发模式过期后清除文件。</p>
+                                </div>
+                                <div class="col-lg-4 d-grid gap-2">
+                                    <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                        <input type="checkbox" class="form-check-input developmode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<panel th:replace="web/free/common/free :: #js"></panel>
+<script>
+    $(document).on("click",'.clean-cache-urls',function(){
+        Swal.fire({
+            title: "<i>刷新缓存</u>",
+            html: '<div style="text-align: left">您将需要指定文件的完整路径。目前进行单个 URL 清除时不支持通配符。您一次最多可以清除 30 个 URL。<br/>' +
+                '按照每行一个的方式分隔 URL。<br/>' +
+                '示例：<br/>' +
+                'http(s)://www.[[${domain}]]<br/>' +
+                'http(s)://www.[[${domain}]]/cat.jpg<br/></div>' +
+                '<div>' +
+                '   <div class="mb-3">' +
+                '       <textarea class="form-control" style="height: 200px;resize: none;" placeholder="Urls" id="clean_some_urls_cache"></textarea>' +
+                '   </div>' +
+                '</div>' +
+                '</form>',
+            showCloseButton: !0,
+            showCancelButton: !0,
+            confirmButtonClass: "btn btn-success",
+            cancelButtonClass: "btn btn-danger ml-1",
+            preConfirm:function(n){
+                return new Promise(function (e, t) {
+                    $(".swal2-actions .swal2-confirm").prop("disabled",false);
+                    $(".swal2-actions .swal2-cancel").prop("disabled",false);
+                    let urls = $("#clean_some_urls_cache").val();
+                    $.post("[[${path}]]/domain/free/flushCache?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",isUrls:true,urls}, function (res) {
+                        loading.hide();
+                        if (res.flag) {
+                            toastr.success("已经清除")
+                            e();
+                        } else {
+                            toastr.error(res.msg);
+                        }
+                    }, 'json').fail(function () {
+                        loading.hide();
+                        toastr.error("连接服务器失败");
+                    });
+                })
+            },
+            confirmButtonColor: "#47bd9a",
+            cancelButtonColor: "#fd625e",
+            confirmButtonText: '清除',
+            cancelButtonText: '取消'
+        }).then(function (e) {
+            if(!e.isDismissed) {
+
+            }
+        })
+    });   
+    
+    $(document).on("click",".clean-cache-all",function(){
+        loading.show();
+        $.post("[[${path}]]/domain/free/flushCache?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",isUrls:false}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("已经清除")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(function(){
+        $.post("[[${path}]]/domain/free/getCacheLevel?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                $("input[value='"+res.data.value+"']").prop("checked",true);
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getCacheTime?_=" + new Date().getTime(), {domainId:"[[${domainId}]]"}, function (res) {
+            if (res.flag) {
+                $(".cache-select-time").val(res.data.value);
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"always_online"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $(".always_online").prop("checked",true);
+                }else{
+                    $(".always_online").prop("checked",false);
+                }
+            }
+        }, 'json');
+        $.post("[[${path}]]/domain/free/getPubSetting?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",settingType:"development_mode"}, function (res) {
+            if (res.flag) {
+                if(res.data.value=="on"){
+                    $(".developmode").prop("checked",true);
+                }else{
+                    $(".developmode").prop("checked",false);
+                }
+            }
+        }, 'json');
+        
+    })
+    $(document).on("click","*[name='cacheLevel']",function(){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updateCacheLevel?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",value:$(this).val()}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+
+    $(document).on('change','.cache-select-time',function(e){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updateCacheTime?_=" + new Date().getTime(), {domainId:"[[${domainId}]]",value:$(this).val()}, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(document).on('click','.always_online',function(e){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {
+            domainId:"[[${domainId}]]",
+            value:$(this).is(":checked")?"on":"off",
+            settingType:"always_online"
+        }, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+    $(document).on('click','.developmode',function(e){
+        loading.show();
+        $.post("[[${path}]]/domain/free/updatePubSetting?_=" + new Date().getTime(), {
+                domainId:"[[${domainId}]]",
+                value:$(this).is(":checked")?"on":"off",
+                settingType:"development_mode"
+            }, function (res) {
+            loading.hide();
+            if (res.flag) {
+                toastr.success("修改成功")
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').fail(function () {
+            loading.hide();
+            toastr.error("连接服务器失败");
+        });
+    })
+</script>
+</body>
+</html>

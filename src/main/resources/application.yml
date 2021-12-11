@@ -1,0 +1,43 @@
+# App system
+server:
+  port: 8989
+#P表达式开始，D天 ，T分隔符， H时 M分 S秒  这里是24小时
+  servlet:
+    session:
+      timeout: PT24H
+spring:
+  http:
+    multipart:
+    enabled: false
+    max-file-size: 100MB
+    max-request-size: 100MB
+
+  thymeleaf:
+    cache: false # 开发时关闭缓存,不然没法看到实时页面
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+  #MySQL
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${mysql.host}/${mysql.db}?createDatabaseIfNotExist=true
+    username: ${mysql.username}
+    password: ${mysql.password}
+  jpa:
+    database: MYSQL
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: com.cfp.system.config.HibernateTableNameConfig
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      show_sql: true
+      format_sql: true
+      
+cloudflare:
+  partners:
+    apiKey: ${cfp.key}
+  

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>您访问的业务即将到来</title>
+    <panel th:replace="common/template :: #header"></panel>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" th:href="@{/libs/swiper/swiper-bundle.min.css}">
+    <!-- App Css-->
+    <link th:href="@{/css/app.min.css}" id="app-style" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="preview-img">
+    <div class="swiper-container preview-thumb">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="slide-bg" th:style="${'background-image:url('+path+'/images/bg-1.jpg);background-size: 100% 100%;'}"></div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-bg" th:style="${'background-image:url('+path+'/images/bg-2.jpg);background-size: 100% 100%;'}"></div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-bg"  th:style="${'background-image:url('+path+'/images/bg-3.jpg);background-size: 100% 100%;'}"></div>
+            </div>
+        </div>
+    </div>
+    <!-- preview-thumb -->
+    <div class="swiper-container preview-thumbsnav">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div>
+                    <img th:src="@{/images/bg-1.jpg}" alt=""
+                         class="avatar-sm nav-img rounded-circle">
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div>
+                    <img th:src="@{/images/bg-2.jpg}" alt=""
+                         class="avatar-sm nav-img rounded-circle">
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div>
+                    <img th:src="@{/images/bg-3.jpg}" alt=""
+                         class="avatar-sm nav-img rounded-circle">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- preview-thumb -->
+</div>
+<!-- preview bg -->
+
+<div class="coming-content min-vh-100 py-4 px-3 py-sm-5">
+    <div class="bg-overlay bg-primary"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center py-4 py-sm-5">
+
+                    <div class="mb-5">
+                        <a href="index.html">
+                            <img th:src="@{/images/logo-sm.svg}" alt="" height="30" class="me-1"><span class="logo-txt text-white font-size-22">CDN-DNS管理面板</span>
+                        </a>
+                    </div>
+                    <h3 class="text-white mt-5">让我们开始使用安全的CDN来保护您的网站</h3>
+                    <p class="text-white-50 font-size-16">仅仅等待数天，您请求的业务可能会被准许并且开通</p>
+
+                    <div th:data-countdown="${#dates.format(dateofyear,'yyyy/MM/dd')}" class="counter-number mt-5"></div>
+
+                    <form class="app-search mt-5 mx-auto">
+                        <div class="position-relative">
+                            <input type="text" class="form-control" placeholder="输入你的Email地址">
+                            <button class="btn btn-primary" type="button"><i class="bx bx-paper-plane align-middle"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</div>
+<script th:src="@{/libs/jquery/jquery.min.js}"></script>
+<script th:src="@{/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/metismenu/metisMenu.min.js}"></script>
+<script th:src="@{/libs/simplebar/simplebar.min.js}"></script>
+<script th:src="@{/libs/node-waves/waves.min.js}"></script>
+<script th:src="@{/libs/feather-icons/feather.min.js}"></script>
+<!-- pace js -->
+<script th:src="@{/libs/pace-js/pace.min.js}"></script>
+<!-- swiper js -->
+<script th:src="@{/libs/swiper/swiper-bundle.min.js}"></script>
+<!-- Plugins js-->
+<script th:src="@{/libs/jquery-countdown/jquery.countdown.min.js}"></script>
+<script th:src="@{/js/pages/coming-soon.init.js}"></script>
+</body>
+</html>

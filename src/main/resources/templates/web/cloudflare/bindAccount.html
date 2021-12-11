@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>绑定CloudFlare账号 - CDN-DNS管理面板</title>
+    <panel th:replace="common/template :: #header"></panel>
+</head>
+<body th:data-layout-mode="${session['data-layout-mode']}" th:data-sidebar="${session['data-sidebar']}" th:data-topbar="${session['data-topbar']}">
+<div id="layout-wrapper">
+    <panel th:replace="common/template :: #menu"></panel>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border border-primary">
+                            <div class="card-header bg-transparent border-primary">
+                                <h4 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>输入账号密码进行绑定</h4>
+                                <p class="card-title-desc">错误的信息无法进行绑定</p>
+                            </div>
+                            <div class="card-body">
+                                <form action="account_form" id="account_form" method="post">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div>
+                                                <div class="mb-3">
+                                                    <label for="cloudflareEmail" class="form-label">CloudFlare邮箱</label>
+                                                    <input class="form-control" type="text" th:value="${session.cfa?.getCloudflareEmail()}" placeholder="admin@cloudflare.com" id="cloudflareEmail" name="cloudflareEmail">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div>
+                                                <div class="mb-3">
+                                                    <label for="cloudflarePass" class="form-label">CloudFlare密码</label>
+                                                    <input class="form-control" value="" type="password" placeholder="********" id="cloudflarePass" name="cloudflarePass">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="d-grid gap-2">
+                                        <button type="button" id="submit" class="btn btn-info btn-lg waves-effect waves-light">尝试绑定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">申明</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="text-danger">1.如果您绑定的CloudFlare账户后续无法访问，系统将会自动解除关联！</p>
+                        <p class="text-danger">2.您的所有信息本网站会进行加密存储</p>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+        </div>
+        <!-- End Page-content -->
+        <panel th:replace="common/template :: #footer"></panel>
+    </div>
+    <!-- 主面板结束 -->
+</div>
+<panel th:replace="common/template :: #right-bar"></panel>
+<!-- dashboard init -->
+<script th:src="@{/js/app.js}"></script>
+<script>
+    $("#submit").click(function(){
+        $.post("[[${path}]]/bindCloudFlareAccount/info?_="+new Date().getTime(),$("#account_form").serialize(),function(data){
+            if(data.flag){
+                Swal.fire("成功", "绑定成功", "success")
+            }else{
+                Swal.fire("错误", data.msg , "error")
+            }
+        },'json').fail(function(e){
+            Swal.fire("错误", "连接服务端失败" , "error")
+        })
+    })
+
+    $(function(){
+        $("#sslc").change(function(){
+            if($(this).is(":checked")){
+                $("#ssl").prop("checked",true);
+            }else{
+                $("#unssl").prop("checked",true);
+            }
+        });
+    })
+</script>
+</body>
+</html>

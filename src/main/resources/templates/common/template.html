@@ -1,0 +1,585 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div id="header" th:remove="tag">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="cloudflare合作伙伴管理平台" name="description" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+    <!-- plugin css -->
+    <link th:href="@{/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css}" rel="stylesheet" type="text/css" />
+    <!-- preloader css -->
+    <link rel="stylesheet" th:href="@{/css/preloader.min.css}" type="text/css" />
+    <!-- Bootstrap Css -->
+    <link th:href="@{/css/bootstrap.min.css}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link th:href="@{/css/app.min.css}" id="app-style" rel="stylesheet" type="text/css" />
+    <link th:href="@{/libs/sweetalert2/sweetalert2.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/libs/toastr.js/toastr.min.css}" rel="stylesheet" type="text/css" />
+</div>
+<div id="footer" th:remove="tag">
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script> © DNS/CDN 面板.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end d-none d-sm-block">
+                        Design & Develop Use By Java
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script th:src="@{/libs/jquery/jquery.min.js}"></script>
+    <script th:src="@{/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/libs/metismenu/metisMenu.min.js}"></script>
+    <script th:src="@{/libs/simplebar/simplebar.min.js}"></script>
+    <script th:src="@{/libs/node-waves/waves.min.js}"></script>
+    <script th:src="@{/libs/feather-icons/feather.min.js}"></script>
+    <!-- pace js -->
+    <script th:src="@{/libs/pace-js/pace.min.js}"></script>
+    <!-- apexcharts -->
+    <script th:src="@{/libs/apexcharts/apexcharts.min.js}"></script>
+    <!-- Plugins js-->
+    <script th:src="@{/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+    <script th:src="@{/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js}"></script>
+    <script th:src="@{/libs/sweetalert2/sweetalert2.min.js}"></script>
+    <script th:src="@{/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+    <script th:src="@{/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
+    <script th:src="@{/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js}"></script>
+    <script th:src="@{/libs/table-edits/build/table-edits.min.js}"></script>
+    <script th:src="@{/libs/toastr.js/toastr.min.js}"></script>
+    <script type="text/javascript" th:if="${session.user==null}">
+        $(".btn-signin-a").click(function(){
+            var redirect=encodeURIComponent(window.location.href);
+            debugger
+            location.href="[[${path}]]/login?redirect="+redirect;
+        });
+    </script>
+    <script type="text/javascript" th:if="${session.user!=null}">
+        $(".btn-signout-a").click(function () {
+            $.post("[[${path}]]/signout?_="+new Date(),{},function(m){
+                top.location.reload();
+            },'json')
+        });
+        $(function(){
+            $('#bs-loading-modal-center').modal({
+                keyboard:false,
+                backdrop:"static"
+            })
+        })
+        toastr.options = {
+            // toastr配置
+            "closeButton": true, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "progressBar": true, //是否显示进度条，当为false时候不显示；当为true时候，显示进度条，当进度条缩短到0时候，消息通知弹窗消失
+            "positionClass": "toast-top-right",//显示的动画位置
+            "showDuration": "400", //显示的动画时间
+            "hideDuration": "1000", //消失的动画时间
+            "timeOut": "7000", //展现时间
+            "extendedTimeOut": "1000", //加长展示时间
+            "showEasing": "swing", //显示时的动画缓冲方式
+            "hideEasing": "linear", //消失时的动画缓冲方式
+            "showMethod": "fadeIn", //显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        }
+        var loading={
+            hide:function(){
+                setTimeout(function (){
+                    $("#bs-loading-modal-center").modal("hide")
+                }, 1000);
+            },
+            show:function(){
+                $("#bs-loading-modal-center").modal("show")
+            }
+        };
+    </script>
+    <script>
+        $(document).on("click",'.updatePasswd',function(){
+            Swal.fire({
+                title: "<u>修改密码</u>",
+                html: '<form id="changePasswd_form">' +
+                    '<div>' +
+                    '   <div class="mb-3">' +
+                    '       <input class="form-control" type="password" value="" placeholder="旧密码" id="changePasswd_oldpwd">' +
+                    '   </div>' +
+                    '   <div class="mb-3">' +
+                    '       <input class="form-control" type="password" value="" placeholder="新密码" id="changePasswd_newpwd">' +
+                    '   </div>' +
+                    '   <div class="mb-3">' +
+                    '       <input class="form-control" type="password" value="" placeholder="重复新密码" id="changePasswd_newpwd_reply">' +
+                    '   </div>' +
+                    '</div>' +
+                    '</form>',
+                showCloseButton: !0,
+                showCancelButton: !0,
+                confirmButtonClass: "btn btn-success",
+                cancelButtonClass: "btn btn-danger ml-1",
+                preConfirm:function(n){
+                    return new Promise(function (e, t) {
+                        $(".swal2-actions .swal2-confirm").prop("disabled",false);
+                        $(".swal2-actions .swal2-cancel").prop("disabled",false);
+                        let changePasswd_oldpwd = $("#changePasswd_oldpwd").val();
+                        let changePasswd_newpwd = $("#changePasswd_newpwd").val();
+                        let changePasswd_newpwd_reply = $("#changePasswd_newpwd_reply").val();
+                        if(changePasswd_newpwd!=changePasswd_newpwd_reply){
+                            toastr.error("两次密码不匹配，请再试一次");
+                            return true;
+                        }else{
+                            $.post("[[${path}]]/user/edit/changePassword?_=" + new Date().getTime(), {
+                                oldPassword: changePasswd_oldpwd,
+                                newPassword: changePasswd_newpwd_reply
+                            }, function (res) {
+                                if (res.flag) {
+                                    toastr.success("修改成功")
+                                    e();
+                                } else {
+                                    toastr.error(res.msg);
+                                }
+                            }, 'json').fail(function () {
+                                toastr.error("连接服务器失败");
+                            });
+                        }
+                    })
+                },
+                confirmButtonColor: "#47bd9a",
+                cancelButtonColor: "#fd625e",
+                confirmButtonText: '提交',
+                cancelButtonText: '取消'
+            })
+        });
+        function updateTheme(type,val){
+            $.post("[[${path}]]/common/theme/change",{type,value:val},function(){},'json')
+        }
+    </script>
+</div>
+<div id="menu" th:remove="tag">
+    <div class="modal fade" id="bs-loading-modal-center">
+        <div class="modal-dialog modal-dialog-centered">
+            <div style="margin: auto">
+                <div class="spinner-border text-danger m-1" style="width: 100px;height: 100px" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <header id="page-topbar">
+        <div class="navbar-header">
+            <div class="d-flex">
+                <!-- LOGO -->
+                <div class="navbar-brand-box">
+                    <a th:href="@{/}" class="logo logo-dark">
+                                <span class="logo-sm">
+                                    <img th:src="@{/images/logo-sm.svg}" alt="" height="24">
+                                </span>
+                        <span class="logo-lg">
+                                    <img th:src="@{/images/logo-sm.svg}" alt="" height="24"> <span class="logo-txt">DNS/CDN 面板</span>
+                                </span>
+                    </a>
+
+                    <a th:href="@{/}" class="logo logo-light">
+                                <span class="logo-sm">
+                                    <img th:src="@{/images/logo-sm.svg}" alt="" height="24">
+                                </span>
+                        <span class="logo-lg">
+                                    <img th:src="@{/images/logo-sm.svg}" alt="" height="24"> <span class="logo-txt">DNS/CDN 面板</span>
+                                </span>
+                    </a>
+                </div>
+
+                <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
+                    <i class="fa fa-fw fa-bars"></i>
+                </button>
+
+                <!-- App Search-->
+                <form class="app-search d-none d-lg-block">
+                    <div class="position-relative">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <button class="btn btn-primary" type="button"><i class="bx bx-search-alt align-middle"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-flex">
+                <div class="dropdown d-inline-block d-lg-none ms-2">
+                    <button type="button" class="btn header-item" id="page-header-search-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="search" class="icon-lg"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                         aria-labelledby="page-header-search-dropdown">
+
+                        <form class="p-3">
+                            <div class="form-group m-0">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="搜索 ..." aria-label="Search Result">
+
+                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="dropdown d-none d-sm-inline-block">
+                    <button type="button" class="btn header-item" id="mode-setting-btn">
+                        <i data-feather="moon" onclick="updateTheme('all','dark')" class="icon-lg layout-mode-dark"></i>
+                        <i data-feather="sun" onclick="updateTheme('all','light')" class="icon-lg layout-mode-light"></i>
+                    </button>
+                </div>
+
+                <div class="dropdown d-none d-lg-inline-block ms-1">
+                    <button type="button" class="btn header-item"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="grid" class="icon-lg"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                        <div class="p-2">
+                            <div class="row g-0">
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/github.png" alt="Github">
+                                        <span>GitHub</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/bitbucket.png" alt="bitbucket">
+                                        <span>Bitbucket</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/dribbble.png" alt="dribbble">
+                                        <span>Dribbble</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/dropbox.png" alt="dropbox">
+                                        <span>Dropbox</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/mail_chimp.png" alt="mail_chimp">
+                                        <span>Mail Chimp</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="/images/brands/slack.png" alt="slack">
+                                        <span>Slack</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item noti-icon position-relative" id="page-header-notifications-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i data-feather="bell" class="icon-lg"></i>
+                        <span class="badge bg-danger rounded-pill">5</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                         aria-labelledby="page-header-notifications-dropdown">
+                        <div class="p-3">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="m-0"> 通知 </h6>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#!" class="small text-reset text-decoration-underline"> 未读 (3)</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-simplebar style="max-height: 230px;">
+                            <a href="#!" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <img src="/images/users/avatar-3.jpg" class="rounded-circle avatar-sm" alt="user-pic">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">James Lemire</h6>
+                                        <div class="font-size-13 text-muted">
+                                            <p class="mb-1">It will seem like simplified English.</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>1 hours ago</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#!" class="text-reset notification-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 avatar-sm me-3">
+                                                <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                    <i class="bx bx-cart"></i>
+                                                </span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Your order is placed</h6>
+                                        <div class="font-size-13 text-muted">
+                                            <p class="mb-1">If several languages coalesce the grammar</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>3 min ago</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-2 border-top d-grid">
+                            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <i class="mdi mdi-arrow-right-circle me-1"></i> <span>更多..</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown d-inline-block" style="display: none">
+                    <button type="button" class="btn header-item right-bar-toggle me-2" style="display: none">
+                        <i data-feather="settings" class="icon-lg"></i>
+                    </button>
+                </div>
+
+                <div class="dropdown d-inline-block" th:if="${session.user!=null}">
+                    <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle header-profile-user" th:src="${session.user?.headimg}"
+                             alt="Header Avatar">
+                        <span class="d-none d-xl-inline-block ms-1 fw-medium">[[${session.user?.nikeName}]]</span>
+                        <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a class="dropdown-item updatePasswd" href="#"><i class="mdi mdi-form-textbox-password font-size-16 align-middle me-1"></i> 修改密码</a>
+                        <a class="dropdown-item" href="auth-lock-screen.html"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> 锁定屏幕</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item btn-signout-a" href="#"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i> 登出</a>
+                    </div>
+                </div>
+                <div class="dropdown d-none d-sm-inline-block" th:if="${session.user==null}">
+                    <button type="button" class="btn header-item btn-signin-a">
+                        <i data-feather="log-in" class="icon-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    
+    <div class="vertical-menu">
+        <div data-simplebar class="h-100">
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                    <li class="menu-title" data-key="t-menu">菜单</li>
+                    <li>
+                        <a th:href="@{/}">
+                            <i data-feather="home"></i>
+                            <span data-key="t-dashboard">管理控制台</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="mdi mdi-dot-net"></i>
+                            <span data-key="t-domain">域名管理</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a th:href="@{/domain/free/addDomain}">
+                                    <i data-feather="plus-square"></i>
+                                    <span data-key="t-domain-add">接入域名</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/domain/free/domainList}">
+                                    <i data-feather="list"></i>
+                                    <span data-key="t-domain-list">域名列表</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="users"></i>
+                            <span data-key="t-user">用户信息</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a th:href="@{/bindCloudFlareAccount}">
+                                    <i data-feather="cloud"></i>
+                                    <span data-key="t-cf-relation">关联CloudFlare</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="updatePasswd">
+                                    <i class="mdi mdi-form-textbox-password"></i>
+                                    <span data-key="t-cf-relation">修改密码</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="mdi mdi-at"></i>
+                            <span data-key="t-user">联系我们</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a target="_blank" href="https://t.me/matecok">
+                                    <i class="mdi mdi-telegram"></i>
+                                    <span data-key="t-cf-relation">Telegram</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:+(1)315 400 0777" target="_blank">
+                                    <i class="mdi mdi-cellphone-iphone"></i>
+                                    <span data-key="t-cf-relation">Telephone</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:toastr.success('抱歉这个没有！')">
+                                    <i class="mdi mdi-qqchat"></i>
+                                    <span data-key="t-cf-relation">QQ</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sidebar -->
+        </div>
+    </div>
+</div>
+<div id="right-bar" th:remove="tag">
+    <div class="right-bar">
+        <div data-simplebar class="h-100">
+            <div class="rightbar-title d-flex align-items-center bg-dark p-3">
+
+                <h5 class="m-0 me-2 text-white">自定义主题</h5>
+
+                <a href="javascript:void(0);" class="right-bar-toggle ms-auto">
+                    <i class="mdi mdi-close noti-icon"></i>
+                </a>
+            </div>
+
+            <!-- Settings -->
+            <hr class="m-0" />
+            <div class="p-4">
+                <h6 class="mt-4 mb-3 pt-2">场景</h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" onclick="updateTheme('layout','light')" name="layout-mode"
+                           id="layout-mode-light" value="light">
+                    <label class="form-check-label" for="layout-mode-light">高亮</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" onclick="updateTheme('layout','dark')" name="layout-mode"
+                           id="layout-mode-dark" value="dark">
+                    <label class="form-check-label" for="layout-mode-dark">暗黑</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2">布局宽度</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-width"
+                           id="layout-width-fuild" value="fuild" onchange="document.body.setAttribute('data-layout-size', 'fluid')">
+                    <label class="form-check-label" for="layout-width-fuild">全屏幕</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-width"
+                           id="layout-width-boxed" value="boxed" onchange="document.body.setAttribute('data-layout-size', 'boxed')">
+                    <label class="form-check-label" for="layout-width-boxed">盒子居中</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2">布局位置</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-position"
+                           id="layout-position-fixed" value="fixed" onchange="document.body.setAttribute('data-layout-scrollable', 'false')">
+                    <label class="form-check-label" for="layout-position-fixed">固定</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-position"
+                           id="layout-position-scrollable" value="scrollable" onchange="document.body.setAttribute('data-layout-scrollable', 'true')">
+                    <label class="form-check-label" for="layout-position-scrollable">可滚动</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2">工具栏场景</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="topbar-color"
+                           id="topbar-color-light" value="light" onchange="document.body.setAttribute('data-topbar', 'light')">
+                    <label class="form-check-label" for="topbar-color-light">高亮</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="topbar-color"
+                           id="topbar-color-dark" value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
+                    <label class="form-check-label" for="topbar-color-dark">暗黑</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2 sidebar-setting">菜单大小</h6>
+
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-default" value="default" onchange="document.body.setAttribute('data-sidebar-size', 'lg')">
+                    <label class="form-check-label" for="sidebar-size-default">默认</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-compact" value="compact" onchange="document.body.setAttribute('data-sidebar-size', 'md')">
+                    <label class="form-check-label" for="sidebar-size-compact">紧凑</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-small" value="small" onchange="document.body.setAttribute('data-sidebar-size', 'sm')">
+                    <label class="form-check-label" for="sidebar-size-small">小 (仅图标)</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2 sidebar-setting">菜单场景</h6>
+
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-light" value="light" onchange="document.body.setAttribute('data-sidebar', 'light')">
+                    <label class="form-check-label" for="sidebar-color-light">高亮</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-dark" value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')">
+                    <label class="form-check-label" for="sidebar-color-dark">暗黑</label>
+                </div>
+                <div class="form-check sidebar-setting">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-brand" value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')">
+                    <label class="form-check-label" for="sidebar-color-brand">蓝色</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 pt-2">菜单位置</h6>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-direction"
+                           id="layout-direction-ltr" value="ltr">
+                    <label class="form-check-label" for="layout-direction-ltr">左</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="layout-direction"
+                           id="layout-direction-rtl" value="rtl">
+                    <label class="form-check-label" for="layout-direction-rtl">右</label>
+                </div>
+
+            </div>
+
+        </div> <!-- end slimscroll-menu-->
+    </div>
+</div>
+</body>
